@@ -8,9 +8,9 @@ const DEFAULT_LANG = {
     },
     modal: {
         password_placeholder: "",
-        password_label: "Contraseña",
+        password_label: "Contraeeña",
         username_label: "Nombre del personaje",
-        username_placholder: "",
+        username_placeholder: "",
         login_button: "Añadir"
     }
 };
