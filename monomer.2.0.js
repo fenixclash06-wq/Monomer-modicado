@@ -75,7 +75,6 @@ function Switcheroo(selector = '#switcheroo', options = {}, lang = {}) {
     }
 
     this.buildSwitcheroo();
-
     this.bindEvents();
 }
 
@@ -164,10 +163,11 @@ Switcheroo.prototype.add = async function (form) {
 
     let fields = monomer.getFormData(form);
 
-    let credentials = (({ username, password }) => ({
-        username,
-        password: monomer.cipher(password)
-    }))(fields);
+    let credentials =
+        (({ username, password }) => ({
+            username,
+            password: monomer.cipher(password)
+        }))(fields);
 
     if (this.isUserLoggedIn()) {
         await this.logout();
@@ -231,18 +231,20 @@ Switcheroo.prototype.switch = async function (user) {
 
 Switcheroo.prototype.login = function (credentials, success, error) {
 
-    return monomer.login(
-        credentials['username'],
-        monomer.decipher(credentials['password'])
-    ).then(res => {
+    return monomer
+        .login(
+            credentials['username'],
+            monomer.decipher(credentials['password'])
+        )
+        .then(res => {
 
-        this.statusCallbacks(
-            res,
-            success,
-            error
-        );
+            this.statusCallbacks(
+                res,
+                success,
+                error
+            );
 
-    });
+        });
 
 };
 
@@ -253,15 +255,17 @@ Switcheroo.prototype.login = function (credentials, success, error) {
 
 Switcheroo.prototype.logout = function (success, error) {
 
-    return monomer.logout().then(res => {
+    return monomer
+        .logout()
+        .then(res => {
 
-        this.statusCallbacks(
-            res,
-            success,
-            error
-        );
+            this.statusCallbacks(
+                res,
+                success,
+                error
+            );
 
-    });
+        });
 
 };
 
@@ -358,15 +362,18 @@ Switcheroo.prototype.updateAvatar = function (user, e) {
 
     let user_id = user.dataset.id;
 
-    let toUpdate = this.findSwitcheroo(user_id);
+    let toUpdate =
+        this.findSwitcheroo(user_id);
 
-    let currentAvatar = monomer.user().avatar();
+    let currentAvatar =
+        monomer.user().avatar();
 
     if (toUpdate['avatar'] == currentAvatar) {
         return;
     }
 
-    toUpdate['avatar'] = currentAvatar;
+    toUpdate['avatar'] =
+        currentAvatar;
 
     this.updateRecord();
 
@@ -425,71 +432,85 @@ Switcheroo.prototype.isCloseButton = function (e) {
 
 
 /* ============================================================
-   AVATAR
+   OBTENER AVATAR
    ============================================================ */
 
 Switcheroo.prototype.catchAvatar = function (data) {
 
-    let pattern = new RegExp(
-        /_userdata\["avatar"\] = "(.+)";/,
-        "gm"
-    );
+    let pattern =
+        new RegExp(
+            /_userdata\["avatar"\] = "(.+)";/,
+            "gm"
+        );
 
-    let result = pattern.exec(data);
+    let result =
+        pattern.exec(data);
 
-    return result ? result[1] : "";
+    return result
+        ? result[1]
+        : "";
 
 };
 
 
 /* ============================================================
-   ID
+   OBTENER ID
    ============================================================ */
 
 Switcheroo.prototype.catchID = function (data) {
 
-    let pattern = new RegExp(
-        /_userdata\["user_id"\] = (\d+);/,
-        "gm"
-    );
+    let pattern =
+        new RegExp(
+            /_userdata\["user_id"\] = (\d+);/,
+            "gm"
+        );
 
-    let result = pattern.exec(data);
+    let result =
+        pattern.exec(data);
 
-    return result ? result[1] : "";
+    return result
+        ? result[1]
+        : "";
 
 };
 
 
 /* ============================================================
-   NOMBRE
+   OBTENER NOMBRE
    ============================================================ */
 
 Switcheroo.prototype.catchUsername = function (data) {
 
-    let pattern = new RegExp(
-        /_userdata\["username"\] = "(.+)";/,
-        "gm"
-    );
+    let pattern =
+        new RegExp(
+            /_userdata\["username"\] = "(.+)";/,
+            "gm"
+        );
 
-    let result = pattern.exec(data);
+    let result =
+        pattern.exec(data);
 
-    return result ? result[1] : "";
+    return result
+        ? result[1]
+        : "";
 
 };
 
 
 /* ============================================================
-   COLOR DEL GRUPO
+   OBTENER COLOR DEL GRUPO
    ============================================================ */
 
 Switcheroo.prototype.catchGroupColor = function (data) {
 
-    let pattern = new RegExp(
-        /_userdata\["groupcolor"\]\s*=\s*"([A-Fa-f0-9]{6})";/,
-        "gm"
-    );
+    let pattern =
+        new RegExp(
+            /_userdata\["groupcolor"\]\s*=\s*["']#?([A-Fa-f0-9]{6})["'];?/,
+            "gm"
+        );
 
-    let result = pattern.exec(data);
+    let result =
+        pattern.exec(data);
 
     if (result && result[1]) {
         return "#" + result[1];
@@ -508,13 +529,17 @@ Switcheroo.prototype.updateCredentials = function (data) {
 
     return {
 
-        id: this.catchID(data),
+        id:
+            this.catchID(data),
 
-        avatar: this.catchAvatar(data),
+        avatar:
+            this.catchAvatar(data),
 
-        username: this.catchUsername(data),
+        username:
+            this.catchUsername(data),
 
-        groupColor: this.catchGroupColor(data)
+        groupColor:
+            this.catchGroupColor(data)
 
     };
 
@@ -527,24 +552,28 @@ Switcheroo.prototype.updateCredentials = function (data) {
 
 Switcheroo.prototype.credentialsExists = function (id) {
 
-    return this.switcherooCredentials.some(function (el) {
+    return this.switcherooCredentials.some(
+        function (el) {
 
-        return el.id === id;
+            return el.id === id;
 
-    });
+        }
+    );
 
 };
 
 
 /* ============================================================
-   CREAR SWITCHEROO
+   CONSTRUIR SWITCHEROO
    ============================================================ */
 
 Switcheroo.prototype.buildSwitcheroo = function () {
 
-    var c = this.options.blockClass;
+    var c =
+        this.options.blockClass;
 
-    this.component.style.userSelect = 'none';
+    this.component.style.userSelect =
+        'none';
 
     this.switcherooCredentials =
         JSON.parse(
@@ -579,7 +608,9 @@ Switcheroo.prototype.buildSwitcheroo = function () {
     );
 
 
-    /* BOTÓN AÑADIR */
+    /* ========================================================
+       BOTÓN AÑADIR
+       ======================================================== */
 
     const login =
         document.createElement('li');
@@ -619,10 +650,11 @@ Switcheroo.prototype.buildSwitcheroo = function () {
 Switcheroo.prototype.createSwitcherooUser =
     function (user, wrapper) {
 
-        let c = this.options.blockClass;
+        let c =
+            this.options.blockClass;
 
         let list =
-            document.createElement("li");
+            document.createElement('li');
 
         list.classList.add(
             c + '__squircle'
@@ -633,32 +665,21 @@ Switcheroo.prototype.createSwitcherooUser =
 
 
         /* ====================================================
-           COLOR INDIVIDUAL DE LA CUENTA
+           COLOR INDIVIDUAL DE ESTA CUENTA
            ==================================================== */
 
         let userColor =
             user.groupColor || "";
 
+
         if (userColor) {
 
             /*
-             * Guardamos el color como variable LOCAL
-             * de este personaje.
+             * Guardamos el color en el propio elemento.
              */
 
             list.dataset.groupColor =
                 userColor;
-
-            list.style.setProperty(
-                '--groups',
-                userColor
-            );
-
-            /*
-             * También guardamos una variable específica
-             * para evitar que la cuenta activa pueda
-             * sobrescribir el color.
-             */
 
             list.style.setProperty(
                 '--switcheroo-user-color',
@@ -684,7 +705,8 @@ Switcheroo.prototype.createSwitcherooUser =
 
         if (this.options.enableReorder) {
 
-            list.draggable = true;
+            list.draggable =
+                true;
 
             list.addEventListener(
                 'dragstart',
@@ -713,7 +735,7 @@ Switcheroo.prototype.createSwitcherooUser =
            ==================================================== */
 
         let avatar =
-            document.createElement("div");
+            document.createElement('div');
 
         avatar.classList.add(
             c + '__avatar'
@@ -721,31 +743,21 @@ Switcheroo.prototype.createSwitcherooUser =
 
 
         /*
-         * IMPORTANTE:
-         * El avatar utiliza el color del personaje,
-         * NO el color del usuario actualmente conectado.
+         * El borde del avatar utiliza el color
+         * almacenado de ESTA cuenta.
          */
 
         if (userColor) {
-
-            avatar.style.setProperty(
-                '--groups',
-                userColor
-            );
 
             avatar.style.setProperty(
                 '--switcheroo-user-color',
                 userColor
             );
 
-            /*
-             * Aplicamos también el color directamente
-             * al borde por si el CSS del foro utiliza
-             * otra variable para el borde.
-             */
-
-            avatar.style.borderColor =
-                userColor;
+            avatar.style.setProperty(
+                'border-color',
+                userColor
+            );
 
         }
 
@@ -759,18 +771,24 @@ Switcheroo.prototype.createSwitcherooUser =
 
         if (this.options.enableReorder) {
 
-            avatar.draggable = false;
+            avatar.draggable =
+                false;
 
             let image =
                 avatar.querySelector('img');
 
             if (image) {
-                image.draggable = false;
+
+                image.draggable =
+                    false;
+
             }
 
         }
 
-        list.appendChild(avatar);
+        list.appendChild(
+            avatar
+        );
 
 
         /* ====================================================
@@ -782,35 +800,26 @@ Switcheroo.prototype.createSwitcherooUser =
                 user.username
             );
 
-
         let usernameText =
             popper.querySelector(
-                '.' + c + '__popper-text'
+                '.' +
+                c +
+                '__popper-text'
             );
 
-
-        /*
-         * El nombre utiliza EXCLUSIVAMENTE el color
-         * guardado de esta cuenta.
-         */
 
         if (userColor) {
 
-            popper.style.setProperty(
-                '--groups',
-                userColor
-            );
-
-            popper.style.setProperty(
-                '--switcheroo-user-color',
-                userColor
-            );
+            /*
+             * Color del nombre.
+             */
 
             if (usernameText) {
 
                 usernameText.style.setProperty(
-                    '--groups',
-                    userColor
+                    'color',
+                    userColor,
+                    'important'
                 );
 
                 usernameText.style.setProperty(
@@ -818,15 +827,19 @@ Switcheroo.prototype.createSwitcherooUser =
                     userColor
                 );
 
-                usernameText.style.color =
-                    userColor;
-
             }
+
+            popper.style.setProperty(
+                '--switcheroo-user-color',
+                userColor
+            );
 
         }
 
 
-        list.appendChild(popper);
+        list.appendChild(
+            popper
+        );
 
 
         /* ====================================================
@@ -841,7 +854,10 @@ Switcheroo.prototype.createSwitcherooUser =
         );
 
         if (this.options.enableReorder) {
-            del.draggable = false;
+
+            del.draggable =
+                false;
+
         }
 
         del.innerHTML =
@@ -849,15 +865,15 @@ Switcheroo.prototype.createSwitcherooUser =
 
 
         /*
-         * El fondo de borrar utiliza el color de ESTA
-         * cuenta, independientemente del usuario activo.
+         * Fondo del botón de borrar.
          */
 
         if (userColor) {
 
             del.style.setProperty(
-                '--groups',
-                userColor
+                'background-color',
+                userColor,
+                'important'
             );
 
             del.style.setProperty(
@@ -865,14 +881,16 @@ Switcheroo.prototype.createSwitcherooUser =
                 userColor
             );
 
-            del.style.backgroundColor =
-                userColor;
-
         }
 
-        list.appendChild(del);
 
-        wrapper.appendChild(list);
+        list.appendChild(
+            del
+        );
+
+        wrapper.appendChild(
+            list
+        );
 
     };
 
@@ -895,7 +913,8 @@ Switcheroo.prototype.createLogoElement =
             c + '__logo'
         );
 
-        logo.href = '/';
+        logo.href =
+            '/';
 
         logo.innerHTML =
             this.options.logo;
@@ -906,12 +925,20 @@ Switcheroo.prototype.createLogoElement =
             )
         );
 
-        wrapper.appendChild(logo);
+        wrapper.appendChild(
+            logo
+        );
 
-        this.createDividerLine(wrapper);
+        this.createDividerLine(
+            wrapper
+        );
 
     };
 
+
+/* ============================================================
+   SEPARADOR
+   ============================================================ */
 
 Switcheroo.prototype.createDividerLine =
     function (wrapper) {
@@ -924,7 +951,9 @@ Switcheroo.prototype.createDividerLine =
             '__divider'
         );
 
-        wrapper.appendChild(divider);
+        wrapper.appendChild(
+            divider
+        );
 
     };
 
@@ -936,7 +965,8 @@ Switcheroo.prototype.createDividerLine =
 Switcheroo.prototype.createCustomButtons =
     function (wrapper) {
 
-        const t = this;
+        const t =
+            this;
 
         const buttons =
             this.options.customButtons;
@@ -947,137 +977,147 @@ Switcheroo.prototype.createCustomButtons =
 
         if (buttons.length > 0) {
 
-            buttons.forEach(el => {
+            buttons.forEach(
+                el => {
 
-                if (!el) return;
+                    if (!el)
+                        return;
 
-                let button;
+                    let button;
 
-                const isValidLink =
-                    (
-                        monomer.isValidURL(el.action) ||
+                    const isValidLink =
                         (
-                            typeof el.action === 'string' &&
-                            el.action.indexOf('/') === 0
-                        )
-                    );
+                            monomer.isValidURL(
+                                el.action
+                            ) ||
+                            (
+                                typeof el.action === 'string' &&
+                                el.action.indexOf('/') === 0
+                            )
+                        );
 
 
-                if (isValidLink) {
+                    if (isValidLink) {
 
-                    button =
-                        document.createElement('a');
+                        button =
+                            document.createElement('a');
 
-                    button.href =
-                        el.action;
+                        button.href =
+                            el.action;
 
-                } else if (
-                    typeof el.action === 'function'
-                ) {
+                    } else if (
+                        typeof el.action === 'function'
+                    ) {
 
-                    button =
-                        document.createElement('div');
+                        button =
+                            document.createElement('div');
 
-                    button.addEventListener(
-                        'click',
-                        function (e) {
+                        button.addEventListener(
+                            'click',
+                            function (e) {
 
-                            el.action.call(
-                                t,
-                                e,
-                                this
+                                el.action.call(
+                                    t,
+                                    e,
+                                    this
+                                );
+
+                            }
+                        );
+
+                    }
+
+
+                    if (!button)
+                        return false;
+
+
+                    if (el.classes) {
+
+                        const listeClasses =
+                            [];
+
+                        if (
+                            typeof el.classes === 'string'
+                        ) {
+
+                            listeClasses.push(
+                                el.classes
+                            );
+
+                        } else if (
+                            typeof el.classes === 'object'
+                        ) {
+
+                            listeClasses.push(
+                                ...Object.values(
+                                    el.classes
+                                )
                             );
 
                         }
-                    );
-
-                }
 
 
-                if (!button) return false;
+                        try {
 
+                            button.classList.add(
+                                ...listeClasses.map(
+                                    x =>
+                                        `${c}__button--${x}`
+                                )
+                            );
 
-                if (el.classes) {
+                        } catch (e) {
 
-                    const listeClasses = [];
+                            console.error(
+                                "[Switcheroo] Erreur dans le nom de classe d'un bouton\n",
+                                e
+                            );
+
+                        }
+
+                    }
+
 
                     if (
-                        typeof el.classes === 'string'
+                        typeof el.before === 'boolean' &&
+                        el.before
                     ) {
 
-                        listeClasses.push(
-                            el.classes
-                        );
+                        button.style.order =
+                            "-1";
 
-                    } else if (
-                        typeof el.classes === 'object'
+                    }
+
+
+                    button.classList.add(
+                        c + '__squircle',
+                        c + '__button'
+                    );
+
+                    button.innerHTML =
+                        el.html;
+
+
+                    if (
+                        el.tooltip &&
+                        typeof el.tooltip === 'string'
                     ) {
 
-                        listeClasses.push(
-                            ...Object.values(
-                                el.classes
+                        button.appendChild(
+                            this.createTooltip(
+                                el.tooltip
                             )
                         );
 
                     }
 
-
-                    try {
-
-                        button.classList.add(
-                            ...listeClasses.map(
-                                x =>
-                                    `${c}__button--${x}`
-                            )
-                        );
-
-                    } catch (e) {
-
-                        console.error(
-                            "[Switcheroo] Erreur dans le nom de classe d'un bouton\n",
-                            e
-                        );
-
-                    }
-
-                }
-
-
-                if (
-                    typeof el.before === "boolean" &&
-                    el.before
-                ) {
-
-                    button.style.order = "-1";
-
-                }
-
-
-                button.classList.add(
-                    c + '__squircle',
-                    c + '__button'
-                );
-
-                button.innerHTML =
-                    el.html;
-
-
-                if (
-                    el.tooltip &&
-                    typeof el.tooltip === 'string'
-                ) {
-
-                    button.appendChild(
-                        this.createTooltip(
-                            el.tooltip
-                        )
+                    wrapper.appendChild(
+                        button
                     );
 
                 }
-
-                wrapper.appendChild(button);
-
-            });
+            );
 
         }
 
@@ -1095,32 +1135,35 @@ Switcheroo.prototype.createTooltip =
             this.options.blockClass;
 
         let popper =
-            document.createElement("div");
+            document.createElement('div');
 
         if (this.options.enableReorder) {
-            popper.draggable = false;
+
+            popper.draggable =
+                false;
+
         }
 
         popper.classList.add(
             c + '__popper'
         );
 
-
         let textNode =
-            document.createElement("div");
+            document.createElement('div');
 
         textNode.classList.add(
             c + '__popper-text'
         );
 
         if (this.options.enableReorder) {
-            textNode.draggable = false;
-        }
 
+            textNode.draggable =
+                false;
+
+        }
 
         textNode.innerHTML =
             tooltip;
-
 
         popper.appendChild(
             textNode
@@ -1172,12 +1215,14 @@ Switcheroo.prototype.dragStart =
         let target =
             e.target;
 
-        target.closest(
-            '.' +
-            this.options.blockClass
-        ).classList.add(
-            'dragged'
-        );
+        target
+            .closest(
+                '.' +
+                this.options.blockClass
+            )
+            .classList.add(
+                'dragged'
+            );
 
         e.dataTransfer.effectAllowed =
             'move';
@@ -1241,12 +1286,14 @@ Switcheroo.prototype.dragEnd =
 
         e.stopPropagation();
 
-        e.target.closest(
-            '.' +
-            this.options.blockClass
-        ).classList.remove(
-            'dragged'
-        );
+        e.target
+            .closest(
+                '.' +
+                this.options.blockClass
+            )
+            .classList.remove(
+                'dragged'
+            );
 
         this.draggedElement =
             null;
@@ -1264,48 +1311,260 @@ Switcheroo.prototype.sortSwitcheroo =
                 '#switcheroo [data-id]'
             );
 
-        let newOrder = [];
+        let newOrder =
+            [];
 
-        els.forEach(el => {
+        els.forEach(
+            el => {
 
-            newOrder.push(
-                el.dataset.id
-            );
+                newOrder.push(
+                    el.dataset.id
+                );
 
-        });
+            }
+        );
 
+        let result =
+            [];
 
-        let result = [];
+        newOrder.forEach(
+            key => {
 
-        newOrder.forEach(key => {
+                var found =
+                    false;
 
-            var found = false;
+                this.switcherooCredentials.filter(
+                    function (item) {
 
-            this.switcherooCredentials.filter(
-                function (item) {
+                        if (
+                            !found &&
+                            item.id == key
+                        ) {
 
-                    if (
-                        !found &&
-                        item.id == key
-                    ) {
+                            result.push(
+                                item
+                            );
 
-                        result.push(item);
+                            found =
+                                true;
 
-                        found = true;
+                            return false;
 
-                        return false;
+                        }
+
+                        return true;
 
                     }
+                );
 
-                    return true;
+            }
+        );
 
-                }
+        this.updateStorage(
+            result
+        );
+
+    };
+
+
+/* ============================================================
+   FORMULARIO DE LOGIN
+   ============================================================ */
+
+Switcheroo.prototype.createFormModal =
+    function (options) {
+
+        let t =
+            this;
+
+        const form =
+            document.createDocumentFragment();
+
+        const c =
+            'switcheroo';
+
+        const vdom =
+            VD.h(
+                'form',
+                {
+                    className:
+                        c + '__form',
+
+                    name:
+                        'form_login',
+
+                    method:
+                        'post',
+
+                    action:
+                        '/login',
+
+                    onSubmit:
+                        (e) => {
+
+                            e.preventDefault();
+
+                            this.add(
+                                e.target
+                            );
+
+                        }
+
+                },
+
+                VD.h(
+                    'div',
+                    {
+                        className:
+                            c + '__form-row'
+                    },
+
+                    VD.h(
+                        'label',
+                        {
+                            for:
+                                c + '-username',
+
+                            className:
+                                c + '__form-label'
+                        },
+
+                        t.lang.modal.username_label
+                    ),
+
+                    VD.h(
+                        'input',
+                        {
+                            type:
+                                'text',
+
+                            className:
+                                c + '__form-input',
+
+                            id:
+                                c + '-username',
+
+                            name:
+                                'username',
+
+                            required:
+                                true,
+
+                            maxlength:
+                                '40'
+                        }
+                    )
+
+                ),
+
+                VD.h(
+                    'div',
+                    {
+                        className:
+                            c + '__form-row'
+                    },
+
+                    VD.h(
+                        'label',
+                        {
+                            for:
+                                c + '-password',
+
+                            className:
+                                c + '__form-label'
+                        },
+
+                        t.lang.modal.password_label
+                    ),
+
+                    VD.h(
+                        'input',
+                        {
+                            className:
+                                c + '__form-input',
+
+                            type:
+                                'password',
+
+                            id:
+                                c + '-password',
+
+                            name:
+                                'password',
+
+                            required:
+                                true,
+
+                            maxlength:
+                                '32'
+                        }
+                    )
+
+                ),
+
+                VD.h(
+                    'input',
+                    {
+                        type:
+                            'checkbox',
+
+                        style:
+                            'display: none;',
+
+                        'aria-label':
+                            'Autologin',
+
+                        name:
+                            'autologin',
+
+                        checked:
+                            true
+                    }
+                ),
+
+                VD.h(
+                    'div',
+                    {
+                        className:
+                            c + '__form-row'
+                    },
+
+                    VD.h(
+                        'button',
+                        {
+                            name:
+                                'login',
+
+                            type:
+                                'submit',
+
+                            className:
+                                c + '__form-button'
+                        },
+
+                        t.lang.modal.login_button
+                    )
+
+                )
+
             );
 
-        });
+        form.appendChild(
+            VD.createElement(
+                vdom
+            )
+        );
 
+        this.loginModal =
+            monomer.modal({
+                content:
+                    VD.createElement(
+                        vdom
+                    ),
 
-        this.updateStorage(result);
+                maxWidth:
+                    400
+            });
 
     };
 
